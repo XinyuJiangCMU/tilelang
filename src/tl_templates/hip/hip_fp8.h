@@ -66,13 +66,15 @@ struct fp8_e4_t {
     return *reinterpret_cast<const hip_fp8_e4_t *>(&data);
   }
   __device__ operator float() const {
+    // gfx950: SDK operator float() for OCP fp8 is host-only -> static_cast fails to
+    // compile in device code; convert on-device (mirrors the float->fp8 setter above).
     constexpr __hip_fp8_interpretation_t interp =
 #if (TILELANG_FP8_E4M3_VARIANT == TILELANG_FP8_E4M3_VARIANT_FNUZ)
         __HIP_E4M3_FNUZ;
 #else
         __HIP_E4M3;
 #endif
-    return __half2float(__hip_cvt_fp8_to_halfraw(data, interp));
+    return __half2float(__half(__hip_cvt_fp8_to_halfraw(data, interp)));
   }
 };
 
@@ -101,13 +103,15 @@ struct fp8_e5_t {
     return *reinterpret_cast<const hip_fp8_e5_t *>(&data);
   }
   __device__ operator float() const {
+    // gfx950: SDK operator float() for OCP fp8 is host-only -> static_cast fails to
+    // compile in device code; convert on-device (mirrors the float->fp8 setter above).
     constexpr __hip_fp8_interpretation_t interp =
 #if (TILELANG_FP8_E5M2_VARIANT == TILELANG_FP8_E5M2_VARIANT_FNUZ)
         __HIP_E5M2_FNUZ;
 #else
         __HIP_E5M2;
 #endif
-    return __half2float(__hip_cvt_fp8_to_halfraw(data, interp));
+    return __half2float(__half(__hip_cvt_fp8_to_halfraw(data, interp)));
   }
 };
 // Note: E8M0 types are not supported in current HIP version
