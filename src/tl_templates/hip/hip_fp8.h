@@ -66,8 +66,8 @@ struct fp8_e4_t {
     return *reinterpret_cast<const hip_fp8_e4_t *>(&data);
   }
   __device__ operator float() const {
-    // gfx950: SDK operator float() for OCP fp8 is host-only -> static_cast fails to
-    // compile in device code; convert on-device (mirrors the float->fp8 setter above).
+    // gfx950: the SDK operator float() is host-only for the FNUZ fp8 variant, so the
+    // static_cast path fails to compile in device code (mirrors the float->fp8 setter above).
     constexpr __hip_fp8_interpretation_t interp =
 #if (TILELANG_FP8_E4M3_VARIANT == TILELANG_FP8_E4M3_VARIANT_FNUZ)
         __HIP_E4M3_FNUZ;
@@ -103,8 +103,8 @@ struct fp8_e5_t {
     return *reinterpret_cast<const hip_fp8_e5_t *>(&data);
   }
   __device__ operator float() const {
-    // gfx950: SDK operator float() for OCP fp8 is host-only -> static_cast fails to
-    // compile in device code; convert on-device (mirrors the float->fp8 setter above).
+    // gfx950: the SDK operator float() is host-only for the FNUZ fp8 variant, so the
+    // static_cast path fails to compile in device code (mirrors the float->fp8 setter above).
     constexpr __hip_fp8_interpretation_t interp =
 #if (TILELANG_FP8_E5M2_VARIANT == TILELANG_FP8_E5M2_VARIANT_FNUZ)
         __HIP_E5M2_FNUZ;
